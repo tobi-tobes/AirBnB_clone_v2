@@ -44,8 +44,7 @@ class BaseModel:
         dct = self.__dict__.copy()
         if '_sa_instance_state' in dct.keys():
             del(dct['_sa_instance_state'])
-        return '[{}] ({}) {}'.format(
-            self.__class__.__name__, self.id, dct)
+        return '[{}] ({}) {}'.format(type(self).__name__, self.id, dct)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -57,7 +56,7 @@ class BaseModel:
     def to_dict(self):
         """Convert instance into dict format"""
         dct = self.__dict__.copy()
-        dct['__class__'] = self.__class__.__name__
+        dct['__class__'] = type(self).__name__
         for k in dct:
             if type(dct[k]) is datetime:
                 dct[k] = dct[k].isoformat()
