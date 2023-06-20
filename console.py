@@ -120,12 +120,16 @@ object creation"""
         for i in range(1, len(params)):
             if "=" in params[i]:
                 params_list = params[i].split("=")
+                if len(params_list) < 2:
+                    continue
                 key = params_list[0]
                 value = params_list[1]
                 if value[0] == "\"" and value[(len(value) - 1)] == "\"":
-                    value = value[:(len(value) - 1)] +\
-                        value[(len(value) - 1) + 1:]
-                    value = value[:0] + value[1:]
+                    value = value[1:-1]
+                    if len(value) == 0:
+                        continue
+                    if " " in value:
+                        continue
                     if "_" in value:
                         value = value.replace("_", " ")
                     if "\"" in value:
@@ -133,6 +137,7 @@ object creation"""
                         prev = idx - 1
                         if value[prev] != "\\":
                             continue
+                        value.replace("\\\"", "\"")
                 elif "." in value:
                     try:
                         value = float(value)
@@ -193,8 +198,9 @@ object creation"""
             return
 
         key = c_name + "." + c_id
+        objs = storage.all()
         try:
-            print(storage._FileStorage__objects[key])
+            print(objs[key])
         except KeyError:
             print("** no instance found **")
 
