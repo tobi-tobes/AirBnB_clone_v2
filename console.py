@@ -120,11 +120,11 @@ object creation"""
         for i in range(1, len(params)):
             if "=" in params[i]:
                 params_list = params[i].split("=")
-                if len(params_list) < 2:
+                if len(params_list) != 2:
                     continue
                 key = params_list[0]
                 value = params_list[1]
-                if value[0] == "\"" and value[(len(value) - 1)] == "\"":
+                if value[0] == '"' and value[(len(value) - 1)] == '"':
                     value = value[1:-1]
                     if len(value) == 0:
                         continue
@@ -166,7 +166,10 @@ object creation"""
             new_instance = HBNBCommand.classes[args]()
         else:
             params = HBNBCommand().create_parameters(args_list)
-            new_instance = HBNBCommand.classes[args_list[0]](**params)
+            if not params:
+                new_instance = HBNBCommand.classes[args]()
+            else:
+                new_instance = HBNBCommand.classes[args_list[0]](**params)
         new_instance.save()
         print(new_instance.id)
 
