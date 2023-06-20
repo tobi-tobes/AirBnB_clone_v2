@@ -124,8 +124,8 @@ object creation"""
                 value = params_list[1]
                 if value[0] == "\"" and value[(len(value) - 1)] == "\"":
                     value = value[:(len(value) - 1)] +\
-                        value[(len(value) - 1) + 1: ]
-                    value = value[:0] + value[1: ]
+                        value[(len(value) - 1) + 1:]
+                    value = value[:0] + value[1:]
                     if "_" in value:
                         value = value.replace("_", " ")
                     if "\"" in value:
@@ -136,18 +136,17 @@ object creation"""
                 elif "." in value:
                     try:
                         value = float(value)
-                    except:
+                    except(ValueError):
                         continue
                 else:
                     try:
                         value = int(value)
-                    except:
+                    except(ValueError):
                         continue
                 parameters[key] = value
             else:
                 continue
         return (parameters)
-
 
     def do_create(self, args):
         """ Create an object of any class"""
@@ -360,6 +359,7 @@ object creation"""
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
