@@ -167,7 +167,7 @@ object creation"""
         else:
             params = HBNBCommand().create_parameters(args_list)
             if not params:
-                new_instance = HBNBCommand.classes[args]()
+                new_instance = HBNBCommand.classes[args_list[0]]()
             else:
                 new_instance = HBNBCommand.classes[args_list[0]](**params)
         new_instance.save()
