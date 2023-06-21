@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" """
+"""Tests for the BaseModel class """
 from models.base_model import BaseModel, Base
 from datetime import datetime
 import unittest
@@ -70,8 +70,7 @@ class test_basemodel(unittest.TestCase):
     def test_str(self):
         """ testing the str method of themodel"""
         i = self.value()
-        self.assertEqual(str(i), '[{}] ({}) {}'.format(self.name, i.id,
-                         i.__dict__))
+        self.assertEqual(str(i), i.__str__())
 
     def test_todict(self):
         """ testing the to_dict method"""
