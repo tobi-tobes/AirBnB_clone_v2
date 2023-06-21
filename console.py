@@ -124,6 +124,8 @@ object creation"""
                     continue
                 key = params_list[0]
                 value = params_list[1]
+                if not key.isalpha():
+                    continue
                 if value[0] == '"' and value[(len(value) - 1)] == '"':
                     value = value[1:-1]
                     if len(value) == 0:
@@ -132,12 +134,14 @@ object creation"""
                         continue
                     if "_" in value:
                         value = value.replace("_", " ")
-                    if "\"" in value:
-                        idx = value.index("\"")
-                        prev = idx - 1
-                        if value[prev] != "\\":
+                    if '"' in value:
+                        illegal_quote = 0
+                        for i in range(0, len(value)):
+                            if value[i] == '"':
+                                if value[i - 1] != "\\":
+                                    illegal_quote += 1
+                        if illegal_quote != 0:
                             continue
-                        value = value.replace("\\\"", "\"")
                 elif "." in value:
                     try:
                         value = float(value)
