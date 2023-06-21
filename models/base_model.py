@@ -29,11 +29,10 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instantiates a new model"""
-        if not kwargs:
-            self.id = str(uuid.uuid4())
-            self.created_at = datetime.now()
-            self.updated_at = datetime.now()
-        else:
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.now()
+        self.updated_at = datetime.now()
+        if kwargs:
             for k in kwargs:
                 if k in ['created_at', 'updated_at']:
                     setattr(self, k, datetime.fromisoformat(kwargs[k]))
@@ -43,9 +42,10 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the instance"""
         dct = self.__dict__.copy()
-        if '_sa_instance_state' in dct:
+        if '_sa_instance_state' in dct.keys():
             del(dct['_sa_instance_state'])
-        return '[{}] ({}) {}'.format(type(self).__name__, self.id, dct)
+        return '[{}] ({}) {}'.format(
+            self.__class__.__name__, self.id, dct)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -57,11 +57,11 @@ class BaseModel:
     def to_dict(self):
         """Convert instance into dict format"""
         dct = self.__dict__.copy()
-        dct['__class__'] = type(self).__name__
+        dct['__class__'] = self.__class__.__name__
         for k in dct:
             if type(dct[k]) is datetime:
                 dct[k] = dct[k].isoformat()
-        if '_sa_instance_state' in dct:
+        if '_sa_instance_state' in dct.keys():
             del(dct['_sa_instance_state'])
         return dct
 

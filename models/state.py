@@ -11,7 +11,7 @@ class State(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
     cities = relationship('City', backref='state',
-                          cascade='all, delete, delete-orphan')
+                          cascade='all, delete')
 
     @property
     def cities(self):
@@ -19,9 +19,7 @@ class State(BaseModel, Base):
         equals the current State.id FileStorage relationship
         between State and City
         '''
-        from models import storage
-        from models.city import City
-
+        from models import storage, City
         related_cities = []
         cities = storage.all(City)
         for city in cities.values():

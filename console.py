@@ -124,8 +124,6 @@ object creation"""
                     continue
                 key = params_list[0]
                 value = params_list[1]
-                if not key.isalpha():
-                    continue
                 if value[0] == '"' and value[(len(value) - 1)] == '"':
                     value = value[1:-1]
                     if len(value) == 0:
@@ -134,14 +132,12 @@ object creation"""
                         continue
                     if "_" in value:
                         value = value.replace("_", " ")
-                    if '"' in value:
-                        illegal_quote = 0
-                        for i in range(0, len(value)):
-                            if value[i] == '"':
-                                if value[i - 1] != "\\":
-                                    illegal_quote += 1
-                        if illegal_quote != 0:
+                    if "\"" in value:
+                        idx = value.index("\"")
+                        prev = idx - 1
+                        if value[prev] != "\\":
                             continue
+                        value.replace("\\\"", "\"")
                 elif "." in value:
                     try:
                         value = float(value)
@@ -170,13 +166,12 @@ object creation"""
             new_instance = HBNBCommand.classes[args]()
         else:
             params = HBNBCommand().create_parameters(args_list)
-            new_instance = HBNBCommand.classes[args_list[0]]()
-            if params:
-                for key in params:
-                    setattr(new_instance, key, params[key])
+            if not params:
+                new_instance = HBNBCommand.classes[args_list[0]]()
+            else:
+                new_instance = HBNBCommand.classes[args_list[0]](**params)
+        new_instance.save()
         print(new_instance.id)
-        storage.new(new_instance)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """

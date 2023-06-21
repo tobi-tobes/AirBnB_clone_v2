@@ -14,7 +14,7 @@ class FileStorage:
         if cls is None:
             return self.__objects
         klass = cls.__name__
-        for key in self.__objects.keys():
+        for key in self.__objects:
             if klass in key:
                 instance_list[key] = self.__objects[key]
         return (instance_list)
@@ -25,7 +25,7 @@ class FileStorage:
 
     def save(self):
         """Saves storage dictionary to file"""
-        with open(FileStorage.__file_path, 'w', encoding="utf-8") as f:
+        with open(FileStorage.__file_path, 'w') as f:
             temp = {}
             temp.update(FileStorage.__objects)
             for key, val in temp.items():
