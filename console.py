@@ -170,7 +170,8 @@ object creation"""
             if params:
                 for key in params:
                     setattr(new_instance, key, params[key])
-        new_instance.save()
+        storage.new(new_instance)
+        storage.save()
         print(new_instance.id)
 
     def help_create(self):
