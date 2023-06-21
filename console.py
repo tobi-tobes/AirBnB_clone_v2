@@ -257,10 +257,10 @@ object creation"""
                 return
             for k, v in all_objs.items():
                 if k.split('.')[0] == args:
-                    print_list.append(str(v))
+                    print_list.append(v.__str__())
         else:
             for k, v in all_objs.items():
-                print_list.append(str(v))
+                print_list.append(v.__str__())
 
         print(print_list)
 
