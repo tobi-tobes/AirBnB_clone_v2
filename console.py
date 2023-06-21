@@ -137,7 +137,7 @@ object creation"""
                         prev = idx - 1
                         if value[prev] != "\\":
                             continue
-                        value.replace("\\\"", "\"")
+                        value = value.replace("\\\"", "\"")
                 elif "." in value:
                     try:
                         value = float(value)
@@ -170,9 +170,9 @@ object creation"""
             if params:
                 for key in params:
                     setattr(new_instance, key, params[key])
+        print(new_instance.id)
         storage.new(new_instance)
         storage.save()
-        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
