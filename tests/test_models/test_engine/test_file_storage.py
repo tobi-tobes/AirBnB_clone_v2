@@ -5,17 +5,19 @@ from models.base_model import BaseModel
 from models import storage
 import os
 
-
+@unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
+                 'file_storage test not supported')
 class test_fileStorage(unittest.TestCase):
     """ Class to test the file storage method """
 
     def setUp(self):
         """ Set up test environment """
         del_list = []
-        for key in storage._FileStorage__objects.keys():
+        objs = storage.all()
+        for key in objs.keys():
             del_list.append(key)
         for key in del_list:
-            del storage._FileStorage__objects[key]
+            del objs[key]
 
     def tearDown(self):
         """ Remove storage file at end of tests """
@@ -32,6 +34,7 @@ class test_fileStorage(unittest.TestCase):
         """ New object is correctly added to __objects """
         new_instance = BaseModel()
         key = new_instance.__class__.__name__ + "." + new_instance.id
+        new_instance.save()
         objs = storage.all()
         self.assertTrue(key in objs)
 
@@ -98,6 +101,7 @@ class test_fileStorage(unittest.TestCase):
         """ Key is properly formatted """
         new_instance = BaseModel()
         key = new_instance.__class__.__name__ + '.' + new_instance.id
+        new_instance.save()
         objs = storage.all()
         temp = ""
         for k in objs.keys():

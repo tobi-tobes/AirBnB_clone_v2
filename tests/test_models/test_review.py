@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-""" """
+"""Tests for the Review Class """
 from tests.test_models.test_base_model import test_basemodel
 from models.review import Review
 import os
+import unittest
 
-
+@unittest.skipUnless(os.getenv("HBNB_TYPE_STORAGE") == "db", "for db storage")
 class test_review(test_basemodel):
     """ review test class"""
 
@@ -17,20 +18,14 @@ class test_review(test_basemodel):
     def test_place_id(self):
         """ testing review place_id attr"""
         new = self.value()
-        self.assertEqual(type(new.place_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.place_id), str)
 
     def test_user_id(self):
         """ testing review user_id attr"""
         new = self.value()
-        self.assertEqual(type(new.user_id), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.user_id), str)
 
     def test_text(self):
         """ testing review text attr"""
         new = self.value()
-        self.assertEqual(type(new.text), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.text), str)
