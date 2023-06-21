@@ -247,11 +247,8 @@ object creation"""
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        print_list = "["
+        print_list = []
         all_objs = storage.all()
-        if len(all_objs) == 0:
-            print("[]")
-            return
 
         if args:
             args = args.split(' ')[0]  # remove possible trailing args
@@ -260,14 +257,10 @@ object creation"""
                 return
             for k, v in all_objs.items():
                 if k.split('.')[0] == args:
-                    print_list += v.__str__()
-                    print_list += ", "
+                    print_list.append(v.__str__())
         else:
             for k, v in all_objs.items():
-                print_list += v.__str__()
-                print_list += ", "
-        print_list = print_list[:-2]
-        print_list += "]"
+                print_list.append(v.__str__())
 
         print(print_list)
 
