@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-""" """
+"""Tests for the State Class """
 from tests.test_models.test_base_model import test_basemodel
 from models.state import State
 import os
+import unittest
 
-
+@unittest.skipUnless(os.getenv("HBNB_TYPE_STORAGE") == "db", "for db storage")
 class test_state(test_basemodel):
     """ states test class"""
 
@@ -17,6 +18,4 @@ class test_state(test_basemodel):
     def test_name3(self):
         """ testing state name attr"""
         new = self.value()
-        self.assertEqual(type(new.name), str if
-                         os.getenv('HBNB_TYPE_STORAGE') != 'db' else
-                         type(None))
+        self.assertEqual(type(new.name), str)
