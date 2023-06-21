@@ -137,7 +137,6 @@ object creation"""
                         prev = idx - 1
                         if value[prev] != "\\":
                             continue
-                        value.replace("\\\"", "\"")
                 elif "." in value:
                     try:
                         value = float(value)
@@ -166,12 +165,13 @@ object creation"""
             new_instance = HBNBCommand.classes[args]()
         else:
             params = HBNBCommand().create_parameters(args_list)
-            if not params:
-                new_instance = HBNBCommand.classes[args_list[0]]()
-            else:
-                new_instance = HBNBCommand.classes[args_list[0]](**params)
-        new_instance.save()
+            new_instance = HBNBCommand.classes[args_list[0]]()
+            if params:
+                for key in params.keys():
+                    setattr(new_instance, key, params[key])
         print(new_instance.id)
+        storage.new(new_instance)
+        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
