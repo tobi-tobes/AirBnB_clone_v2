@@ -43,7 +43,7 @@ class BaseModel:
     def __str__(self):
         """Returns a string representation of the instance"""
         dct = self.__dict__.copy()
-        if '_sa_instance_state' in dct.keys():
+        if '_sa_instance_state' in dct:
             del(dct['_sa_instance_state'])
         return '[{}] ({}) {}'.format(type(self).__name__, self.id, dct)
 
@@ -61,7 +61,7 @@ class BaseModel:
         for k in dct:
             if type(dct[k]) is datetime:
                 dct[k] = dct[k].isoformat()
-        if '_sa_instance_state' in dct.keys():
+        if '_sa_instance_state' in dct:
             del(dct['_sa_instance_state'])
         return dct
 
