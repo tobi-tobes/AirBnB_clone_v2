@@ -3,7 +3,6 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey, Integer, Float, Table
 from sqlalchemy.orm import relationship
-from os import getenv
 
 place_amenity = Table('place_amenity', Base.metadata,
                 Column("place_id", String(60), ForeignKey('places.id'),
@@ -31,9 +30,7 @@ class Place(BaseModel, Base):
                            backref="place")
     amenities = relationship('Amenity', secondary="place_amenity",
                              viewonly=False)
-
-    if getenv("HBNB_TYPE_STORAGE") != "db":
-        amenity_ids = []
+    amenity_ids = []
 
     @property
     def reviews(self):
