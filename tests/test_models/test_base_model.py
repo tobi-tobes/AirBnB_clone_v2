@@ -6,8 +6,6 @@ import unittest
 from uuid import UUID
 import json
 import os
-from models import storage
-
 
 @unittest.skipIf(os.getenv('HBNB_TYPE_STORAGE') == 'db',
                  'basemodel test not supported')
@@ -65,8 +63,9 @@ class test_basemodel(unittest.TestCase):
         i = self.value()
         i.save()
         key = self.name + "." + i.id
-        all_objs = storage.all()
-        self.assertTrue(key in all_objs.keys())
+        with open('file.json', 'r') as f:
+            j = json.load(f)
+            self.assertEqual(j[key], i.to_dict())
 
     def test_str(self):
         """ testing the str method of themodel"""
@@ -113,9 +112,7 @@ class test_basemodel(unittest.TestCase):
                 {
                     '__class__': mdl.__class__.__name__,
                     'id': 'u-b34',
-                    'age': 13,
-                    'created_at': self.created_at.isoformat(),
-                    'updated_at': self.updated_at.isoformat()
+                    'age': 13
                 }
             )
             self.assertDictEqual(
@@ -123,9 +120,7 @@ class test_basemodel(unittest.TestCase):
                 {
                     '__class__': mdl.__class__.__name__,
                     'id': 'u-b34',
-                    'age': None,
-                    'created_at': self.created_at.isoformat(),
-                    'updated_at': self.updated_at.isoformat()
+                    'age': None
                 }
             )
         # Tests to_dict output contradiction

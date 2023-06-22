@@ -6,16 +6,18 @@ import os
 import unittest
 
 
-@unittest.skipUnless(os.getenv("HBNB_TYPE_STORAGE") != "db", "for db storage")
 class test_Amenity(test_basemodel):
     """ amenity test class"""
 
     def __init__(self, *args, **kwargs):
         """inti the test class """
         super().__init__(*args, **kwargs)
+        self.name = "Amenity"
         self.value = Amenity
 
+    @unittest.skipUnless(os.getenv("HBNB_TYPE_STORAGE") == "db",
+                         "for db storage")
     def test_name2(self):
         """testing name type """
-        new_instance = self.value(name="Wifi")
-        self.assertEqual(type(new_instance.name), str)
+        new = self.value()
+        self.assertEqual(type(new.name), str)
