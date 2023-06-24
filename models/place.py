@@ -30,7 +30,6 @@ class Place(BaseModel, Base):
                            backref="place")
     amenities = relationship('Amenity', secondary="place_amenity",
                              viewonly=False)
-    amenity_ids = []
 
     @property
     def reviews(self):
