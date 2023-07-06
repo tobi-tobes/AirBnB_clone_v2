@@ -19,10 +19,10 @@ def do_pack():
     local("mkdir -p versions")
 
     current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    fname = "versions/web_static_{}.tgz".format(current)
+    fname = "./versions/web_static_{}.tgz".format(current)
 
     result = local("tar -cvzf {} web_static".format(fname))
-    if result.succeeded and os.path.isfile(fname) and result.return_code == 0:
+    if result.succeeded:
         return fname
     else:
         return None
