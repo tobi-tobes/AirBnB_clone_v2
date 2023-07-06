@@ -13,23 +13,6 @@ env.hosts = ['54.160.124.170', '52.205.97.123']
 env.user = "ubuntu"
 
 
-def do_pack():
-    """
-    This function generates a .tgz archive from the contents
-    of the web_static folder of your AirBnB Clone repo
-    """
-    local("mkdir -p versions")
-
-    current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    fname = "./versions/web_static_{}.tgz".format(current)
-
-    result = local("tar -cvzf {} web_static".format(fname))
-    if result.succeeded:
-        return fname
-    else:
-        return None
-
-
 def do_deploy(archive_path):
     """
     This function distributes an archive to your web servers

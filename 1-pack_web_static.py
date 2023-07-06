@@ -22,6 +22,7 @@ def do_pack():
 
     result = local("tar -cvzf {} web_static".format(fname))
     if result.succeeded:
+        local("chmod 664 {}".format(fname))
         return fname
     else:
         return None
