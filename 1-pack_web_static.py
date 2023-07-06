@@ -20,7 +20,7 @@ def do_pack():
     current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     fname = "versions/web_static_" + current + ".tgz"
     result = local("tar -cvzf {} web_static".format(fname))
-    if result.succeeded:
+    if result.succeeded and result.return_code == 0:
         file_stats = os.stat(fname)
         file_size = file_stats.st_size
         print("web_static packed: {} -> {}Bytes".format(fname, file_size))

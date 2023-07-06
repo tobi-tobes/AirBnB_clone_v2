@@ -23,14 +23,15 @@ def do_deploy(archive_path):
     if not put(archive_path, "/tmp/").succeeded:
         return False
     files = archive_path.split("/")
+    file_with_ext = files[-1]
     filename = files[-1].split(".")[0]
     if not run("mkdir -p /data/web_static/releases/{}/".format(filename))\
        .succeeded:
         return False
-    if not run("tar -xzf {} -C /data/web_static/releases/{}/".
-               format(archive_path, filename)).succeeded:
+    if not run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+               format(file_with_ext, filename)).succeeded:
         return False
-    if not run("rm /tmp/{}".format(archive_path)).succeeded:
+    if not run("rm /tmp/{}".format(file_with_ext)).succeeded:
         return False
     if not run("mv /data/web_static/releases/{}/web_static/* \
 /data/web_static/releases/{}/".format(filename, filename)).succeeded:
