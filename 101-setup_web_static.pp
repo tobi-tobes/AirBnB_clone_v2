@@ -16,50 +16,26 @@ service { 'nginx':
   require => Package['nginx'],
 }
 
-file { '/data':
-  ensure  => directory,
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
-  recurse => true,
-}
-
-file { '/data/web_static':
-  ensure => directory,
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-}
-
-file { '/data/web_static/releases':
-  ensure => directory,
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-}
-
-file { '/data/web_static/shared':
-  ensure => directory,
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-}
-
-file { '/data/web_static/releases/test':
-  ensure => directory,
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
+exec { 'Create /data directory':
+  command => '/bin/mkdir -p /data/web_static/releases/test /data/web_static/shared',
 }
 
 file { '/data/web_static/releases/test/index.html':
   ensure  => present,
   content => 'Welcome to AirBnB Clone!',
-  owner   => 'ubuntu',
-  group   => 'ubuntu',
+  require => Exec['Create /data directory'],
 }
 
 file { '/data/web_static/current':
-  ensure => link,
-  target => '/data/web_static/releases/test/',
-  owner  => 'ubuntu',
-  group  => 'ubuntu',
-  force  => true,
+  ensure  => link,
+  target  => '/data/web_static/releases/test/',
+  force   => true,
+  require => File['/data/web_static/releases/test/index.html'],
+}
+
+exec { 'Set permissions':
+  command => '/bin/chown -R ubuntu:ubuntu /data/',
+  require => File['/data/web_static/current'],
 }
 
 $host_name = $::hostname
@@ -93,10 +69,4 @@ file { '/etc/nginx/sites-available/default':
   ensure  => file,
   content => $config,
   notify  => Service['nginx'],
-}
-
-service {'nginx':
-  ensure  => running,
-  enable  => true,
-  require => File['/etc/nginx/sites-available/default'],
 }
