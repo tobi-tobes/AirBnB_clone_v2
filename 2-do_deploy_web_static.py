@@ -1,43 +1,68 @@
 #!/usr/bin/python3
-from datetime import datetime
+"""
+2-do_deploy_web_static.py
+This module contains a Fabric script that distributes an archive
+to your web servers, using the function do_deploy
+"""
+
 from fabric.api import *
-from os import path
+import os
+import datetime
 
-
-env.hosts = ['35.229.93.37', '54.196.213.127']
-
-
-def do_pack():
-    """Generates a .tgz archive from the contents
-    of the web_static folder of this repository.
-    """
-
-    d = datetime.now()
-    now = d.strftime('%Y%m%d%H%M%S')
-
-    local("mkdir -p versions")
-    local("tar -czvf versions/web_static_{}.tgz web_static".format(now))
+env.hosts = ['54.160.124.170', '52.205.97.123']
+env.user = "ubuntu"
 
 
 def do_deploy(archive_path):
-    """Distributes an .tgz archive through web servers
     """
+    This function distributes an archive to your web servers
+    """
+    if not os.path.exists(archive_path):
+        return False
+    if not os.path.isfile(archive_path):
+        return False
+    if ".tgz" not in archive_path:
+        return False
 
-    if path.exists(archive_path):
-        archive = archive_path.split('/')[1]
-        a_path = "/tmp/{}".format(archive)
-        folder = archive.split('.')[0]
-        f_path = "/data/web_static/releases/{}/".format(folder)
+    result = put(archive_path, "/tmp/")
+    if result.failed or result.return_code != 0:
+        return False
 
-        put(archive_path, a_path)
-        run("mkdir -p {}".format(f_path))
-        run("tar -xzf {} -C {}".format(a_path, f_path))
-        run("rm {}".format(a_path))
-        run("mv -f {}web_static/* {}".format(f_path, f_path))
-        run("rm -rf {}web_static".format(f_path))
-        run("rm -rf /data/web_static/current")
-        run("ln -s {} /data/web_static/current".format(f_path))
+    files = archive_path.split("/")
+    file_with_ext = files[-1]
+    filename = files[-1].split(".")[0]
 
-        return True
+    result = run("mkdir -p /data/web_static/releases/{}/".format(filename))
+    if result.failed or result.return_code != 0:
+        return False
 
-    return False
+    result = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+               format(file_with_ext, filename))
+    if result.failed or result.return_code != 0:
+        return False
+
+    result = run("rm /tmp/{}".format(file_with_ext))
+    if result.failed or result.return_code != 0:
+        return False
+
+    result = run("mv /data/web_static/releases/{}/web_static/* \
+/data/web_static/releases/{}/".format(filename, filename))
+    if result.failed or result.return_code != 0:
+        return False
+
+    result = run("rm -rf /data/web_static/releases/{}/web_static/".
+               format(filename))
+    if result.failed or result.return_code != 0:
+        return False
+
+    result = run("rm -rf /data/web_static/current")
+    if result.failed or result.return_code != 0:
+        return False
+
+    result = run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
+               format(filename))
+    if result.failed or result.return_code != 0:
+        return False
+
+    print("New version deployed!")
+    return True
