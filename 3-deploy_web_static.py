@@ -13,6 +13,7 @@ env.hosts = ['54.160.124.170', '52.205.97.123']
 env.user = "ubuntu"
 env.key_filename = "/alx-system_engineering-devops/\
 0x04-loops_conditions_and_parsing/0-RSA_public_key"
+current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
 
 def do_pack():
@@ -23,7 +24,6 @@ def do_pack():
     if not os.path.exists("versions"):
         os.makedirs("versions")
 
-    current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     fname = "versions/web_static_{}.tgz".format(current)
 
     result = local("tar -cvzf {} web_static".format(fname))
@@ -31,6 +31,7 @@ def do_pack():
         file_stats = os.stat(fname)
         file_size = file_stats.st_size
         print("web_static packed: {} -> {}Bytes".format(fname, file_size))
+        local("chmod 664 {}".format(fname))
         return fname
     else:
         return None

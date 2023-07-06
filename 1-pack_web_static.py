@@ -9,6 +9,8 @@ the function do_pack.
 from fabric.api import *
 import datetime
 
+current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+
 
 def do_pack():
     """
@@ -17,11 +19,13 @@ def do_pack():
     """
     local("mkdir -p versions")
 
-    current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
     fname = "./versions/web_static_{}.tgz".format(current)
 
     result = local("tar -cvzf {} web_static".format(fname))
     if result.succeeded:
+        file_stats = os.stat(fname)
+        file_size = file_stats.st_size
+        print("web_static packed: {} -> {}Bytes".format(fname, file_size))
         local("chmod 664 {}".format(fname))
         return fname
     else:
