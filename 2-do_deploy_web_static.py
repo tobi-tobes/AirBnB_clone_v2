@@ -18,7 +18,9 @@ def do_deploy(archive_path):
     """
     This function distributes an archive to your web servers
     """
-    if not os.path.exists(archive_path):
+    if not os.path.isfile(archive_path):
+        return False
+    if ".tgz" not in archive_path:
         return False
     if not put(archive_path, "/tmp/").succeeded:
         return False
