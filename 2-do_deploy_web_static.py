@@ -7,11 +7,27 @@ to your web servers, using the function do_deploy
 
 from fabric.api import *
 import os
+import datetime
 
 env.hosts = ['54.160.124.170', '52.205.97.123']
 env.user = "ubuntu"
-env.key_filename = "/alx-system_engineering-devops/\
-0x04-loops_conditions_and_parsing/0-RSA_public_key"
+
+
+def do_pack():
+    """
+    This function generates a .tgz archive from the contents
+    of the web_static folder of your AirBnB Clone repo
+    """
+    local("mkdir -p versions")
+
+    current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    fname = "./versions/web_static_{}.tgz".format(current)
+
+    result = local("tar -cvzf {} web_static".format(fname))
+    if result.succeeded:
+        return fname
+    else:
+        return None
 
 
 def do_deploy(archive_path):
@@ -25,7 +41,9 @@ def do_deploy(archive_path):
     if ".tgz" not in archive_path:
         return False
 
-    put(archive_path, "/tmp/")
+    result = put(archive_path, "/tmp/")
+    if result.failed or result.return_code != 0:
+        return False
 
     files = archive_path.split("/")
     file_with_ext = files[-1]

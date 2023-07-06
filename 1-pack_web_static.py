@@ -25,7 +25,3 @@ def do_pack():
         return fname
     else:
         return None
-
-
-if __name__ == "__main__":
-    do_pack()
