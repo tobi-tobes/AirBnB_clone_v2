@@ -21,20 +21,21 @@ def do_clean(number=0):
     """
     files_ver = local("ls -t ./versions", capture=True).split("\n")
     files_rel = run("ls -t /data/web_static/releases/").split("\n")
+    number = int(number)
 
     if files_ver:
         if number == 0 or number == 1:
-            for i in range(1, len(files_ver) - 1):
-                local("rm {}".format(files_ver[i]))
+            for i in range(1, len(files_ver)):
+                local("rm versions/{}".format(files_ver[i]))
         else:
-            for i in range(number, len(files_ver) - 1):
-                local("rm {}".format(files_ver[i]))
+            for i in range(number, len(files_ver)):
+                local("rm versions/{}".format(files_ver[i]))
 
     if files_rel:
         with cd("/data/web_static/releases/"):
             if number == 0 or number == 1:
-                for i in range(1, len(files_rel) - 1):
-                    run("rm {}".format(files_rel[i]))
+                for i in range(1, len(files_rel)):
+                    run("rm -r {}".format(files_rel[i]))
             else:
-                for i in range(number, len(files_rel) - 1):
-                    run("rm {}".format(files_rel[i]))
+                for i in range(number, len(files_rel)):
+                    run("rm -r {}".format(files_rel[i]))
