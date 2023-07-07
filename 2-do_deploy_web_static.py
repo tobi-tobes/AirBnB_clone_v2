@@ -24,45 +24,24 @@ def do_deploy(archive_path):
     if ".tgz" not in archive_path:
         return False
 
-    result = put(archive_path, "/tmp/")
-    if result.failed or result.return_code != 0:
+    filename = os.path.basename(archive_path)
+    filename_no_ext = os.path.splitext(filename)[0]
+
+    try:
+        put(archive_path, "/tmp/")
+        run("mkdir -p /data/web_static/releases/{}/".format(filename_no_ext))
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+            format(filename, filename_no_ext))
+        run("rm /tmp/{}".format(filename))
+        run("mv /data/web_static/releases/{}/web_static/* \
+/data/web_static/releases/{}/".format(filename_no_ext, filename_no_ext))
+        run("rm -rf /data/web_static/releases/{}/web_static".
+            format(filename_no_ext))
+        run("rm -rf /data/web_static/current")
+        run("ln -s /data/web_static/releases/{}/ /data/web_static/current".
+            format(filename_no_ext))
+        print("New version deployed!")
+        return True
+
+    except Exception as e:
         return False
-
-    files = archive_path.split("/")
-    file_with_ext = files[-1]
-    filename = files[-1].split(".")[0]
-
-    result = run("mkdir -p /data/web_static/releases/{}/".format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
-                 format(file_with_ext, filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm /tmp/{}".format(file_with_ext))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("mv /data/web_static/releases/{}/web_static/* \
-/data/web_static/releases/{}/".format(filename, filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm -rf /data/web_static/releases/{}/web_static/".
-                 format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm -rf /data/web_static/current")
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-                 .format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    print("New version deployed!")
-    return True
