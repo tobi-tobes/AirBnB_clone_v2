@@ -22,7 +22,7 @@ def do_pack():
 
     fname = "versions/web_static_{}.tgz".format(current)
 
-    result = local("tar -cvzf {} web_static/*".format(fname))
+    result = local("tar -cvzf {} ./web_static".format(fname))
 
     if result.succeeded:
         file_stats = os.stat(fname)
