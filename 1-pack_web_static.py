@@ -8,6 +8,7 @@ the function do_pack.
 
 from fabric.api import *
 import datetime
+import os
 
 current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
