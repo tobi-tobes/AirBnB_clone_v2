@@ -20,9 +20,11 @@ def do_pack():
     """
     local("mkdir -p versions")
 
-    fname = "./versions/web_static_{}.tgz".format(current)
+    fname = "versions/web_static_{}.tgz".format(current)
 
-    result = local("tar -cvzf {} ./web_static".format(fname))
+    with lcd("web_static"):
+        result = local("tar -cvzf ../{} .".format(fname))
+
     if result.succeeded:
         file_stats = os.stat(fname)
         file_size = file_stats.st_size
