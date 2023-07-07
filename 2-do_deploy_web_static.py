@@ -9,9 +9,6 @@ from fabric.api import *
 import os
 import datetime
 
-env.hosts = ['54.160.124.170', '52.205.97.123']
-env.user = "ubuntu"
-
 
 def do_deploy(archive_path):
     """
