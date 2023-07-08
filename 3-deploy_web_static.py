@@ -21,13 +21,13 @@ def do_pack():
     This function generates a .tgz archive from the contents
     of the web_static folder of your AirBnB Clone repo
     """
-    if not os.path.exists("versions"):
-        os.makedirs("versions")
+    local("mkdir -p versions")
 
     fname = "versions/web_static_{}.tgz".format(current)
 
     result = local("tar -cvzf {} web_static".format(fname))
-    if result.succeeded and os.path.isfile(fname) and result.return_code == 0:
+
+    if result.succeeded:
         file_stats = os.stat(fname)
         file_size = file_stats.st_size
         print("web_static packed: {} -> {}Bytes".format(fname, file_size))
@@ -45,48 +45,29 @@ def do_deploy(archive_path):
         return False
     if not os.path.isfile(archive_path):
         return False
-    if ".tgz" not in archive_path:
+
+    filename = os.path.basename(archive_path)
+    filename_no_ext = os.path.splitext(filename)[0]
+
+    try:
+        put(archive_path, "/tmp/")
+        run("sudo mkdir -p /data/web_static/releases/{}/"
+            .format(filename_no_ext))
+        run("sudo tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
+            format(filename, filename_no_ext))
+        run("sudo rm /tmp/{}".format(filename))
+        run("sudo mv /data/web_static/releases/{}/web_static/* /data\
+/web_static/releases/{}/".format(filename_no_ext, filename_no_ext))
+        run("sudo rm -rf /data/web_static/releases/{}/web_static".
+            format(filename_no_ext))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s /data/web_static/releases/{}/ /data/web_static/current"
+            .format(filename_no_ext))
+        print("New version deployed!")
+
+    except Exception as e:
         return False
 
-    put(archive_path, "/tmp/")
-
-    files = archive_path.split("/")
-    file_with_ext = files[-1]
-    filename = files[-1].split(".")[0]
-
-    result = run("mkdir -p /data/web_static/releases/{}/".format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".
-                 format(file_with_ext, filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm /tmp/{}".format(file_with_ext))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("mv /data/web_static/releases/{}/web_static/*\
- /data/web_static/releases/{}/".format(filename, filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm -rf /data/web_static/releases/{}/web_static/".
-                 format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("rm -rf /data/web_static/current")
-    if result.failed or result.return_code != 0:
-        return False
-
-    result = run("ln -s /data/web_static/releases/{}/ /data/web_static/current"
-                 .format(filename))
-    if result.failed or result.return_code != 0:
-        return False
-
-    print("New version deployed!")
     return True
 
 
