@@ -10,9 +10,6 @@ import datetime
 import os
 
 env.hosts = ['54.160.124.170', '52.205.97.123']
-env.user = "ubuntu"
-env.key_filename = "/alx-system_engineering-devops/\
-0x04-loops_conditions_and_parsing/0-RSA_public_key"
 current = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
 
