@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<HTML lang="en">
+    <HEAD>
+        <TITLE>HBNB</TITLE>
+    </HEAD>
+    <BODY>
+        <H1>States</H1>
+        <UL>
+	{% for key, value in state_cities.items() %}
+	    <LI> {{ key.id }}: <B>{{ key.name }}</B>
+	        <UL>
+	        {% for city in value %}
+		    <LI>{{ city.id }}: <B>{{ city.name }}</B></LI>
+		{% endfor %}
+		</UL>
+	    </LI>
+	{% endfor %}
+	</UL>
+    </BODY>
+</HTML>
