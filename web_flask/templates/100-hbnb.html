@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="web_flask/static/styles/3-header.css">
         <link rel="stylesheet" href="web_flask/static/styles/3-footer.css">
         <link rel="stylesheet" href="web_flask/static/styles/6-filters.css">
+	<link rel="stylesheet" href="web_flask/static/styles/8-places.css">
         <link rel="icon" type="image/x-icon" href="web_flask/static/images/icon.png">
 	<title>AirBnB Clone</title>
     </head>
@@ -39,6 +40,24 @@
                     Search
                 </button>
             </section>
+	    <section class="places">
+                <h1>Places</h1>
+                <article>
+		{%- for place in places %}
+                    <h2 class="place-name">{{ place.name }}</h2>
+                    <div class="price_by_night">${{ place.price_by_night }}</div>
+                    <div class="information">
+                        <div class="max_guest">{{ place.max_guest }} Guest</div>
+                        <div class="number_rooms">{{ place.number_rooms }} Room</div>
+                        <div class="number_bathrooms">{{ place.number_bathrooms }} Bathroom</div>
+                    </div>
+                    <div class="user"><strong>Owner:</strong> {{ place.user.first_name }} {{ place.user.last_name }}</div>
+                    <div class="description">
+                        {{ place.description }}
+                    </div>
+		{% endfor %}
+                </article>
+	    </section>
         </div>
         <footer>
             Best School
