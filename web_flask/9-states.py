@@ -22,6 +22,25 @@ def states():
     return render_template('7-states_list.html', states=states)
 
 
+@app.route("/cities_by_states", strict_slashes=False)
+def cities_by_states():
+    """display a HTML page"""
+    states_dict = storage.all(State)
+    states = sorted(states_dict.values(), key=lambda state: state.name)
+    state_cities = OrderedDict()
+    storage_type = getenv('HBNB_TYPE_STORAGE')
+
+    for state in states:
+        if storage_type == 'db':
+            cities = state.cities
+        else:
+            cities = state.cities()
+        state_cities[state] = sorted(cities, key=lambda city: city.name)
+
+    return render_template('8-cities_by_states.html',
+                           state_cities=state_cities)
+
+
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
     """display a HTML page"""
