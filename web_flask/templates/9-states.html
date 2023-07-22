@@ -4,6 +4,14 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
+    {% if states %}
+        <H1>States</H1>
+        <UL>
+	  {% for item in states %}
+	      <LI>{{ item.id }}: <B>{{ item.name}}</B></LI>
+	  {% endfor %}
+        </UL>
+    {% endif %}
     {% if cities %}
         <H1>State: {{ state.name }}</H1>
 	<H3>Cities:</H3>
