@@ -40,7 +40,7 @@ def states_id(id):
                 cities = state.cities()
             cities = sorted(cities, key=lambda city: city.name)
             break
-                
+
     return render_template('9-states.html', cities=cities, state=state)
 
 
