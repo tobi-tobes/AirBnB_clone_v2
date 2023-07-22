@@ -34,7 +34,7 @@ def hbnb_filters():
     amenities = sorted(amenities_dict.values(),
                        key=lambda amenity: amenity.name)
 
-    return render_template('8-cities_by_states.html',
+    return render_template('10-hbnb_filters.html',
                            state_cities=state_cities,
                            amenities=amenities)
 
