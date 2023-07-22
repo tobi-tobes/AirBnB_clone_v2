@@ -9,7 +9,6 @@ from markupsafe import escape
 from models import storage
 from models.state import State
 from models.city import City
-from collections import OrderedDict
 from os import getenv
 
 app = Flask(__name__)
@@ -20,13 +19,13 @@ def states():
     """display a HTML page"""
     states_dict = storage.all(State)
     states = sorted(states_dict.values(), key=lambda state: state.name)
-    return render_template('9-states.html', states=states)
+    return render_template('7-states_list.html', states=states)
 
 
 @app.route("/states/<id>", strict_slashes=False)
 def states_id(id):
     """display a HTML page"""
-    param = escape(id)
+    param = id
     states = storage.all(State)
     cities = []
     state = ""
@@ -39,6 +38,7 @@ def states_id(id):
             else:
                 cities = state.cities()
             cities = sorted(cities, key=lambda city: city.name)
+            print(cities)
             break
 
     return render_template('9-states.html', cities=cities, state=state)
