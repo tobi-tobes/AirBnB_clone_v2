@@ -28,11 +28,11 @@ def states_id(id):
     param = id
     states = storage.all(State)
     cities = []
-    state = ""
+    state = None
 
     for key in states:
-        state = states[key]
-        if state.id == param:
+        if states[key].id == param:
+            state = states[key]
             if getenv('HBNB_TYPE_STORAGE') == 'db':
                 cities = state.cities
             else:
