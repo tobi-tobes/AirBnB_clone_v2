@@ -4,7 +4,7 @@
         <TITLE>HBNB</TITLE>
     </HEAD>
     <BODY>
-    {% state is none %}
+    {% if not cities or state is none %}
         <H1>Not found!</H1>
     {% else %}
         <H1>State: {{ state.name }}</H1>
